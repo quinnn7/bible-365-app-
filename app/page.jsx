@@ -10,7 +10,7 @@ export default function Page() {
     return saved ? parseInt(saved) : 1;
   });
 
-  // Update localStorage whenever currentDay changes
+  // Save current day to localStorage whenever it changes
   useEffect(() => {
     localStorage.setItem("bookmarkedDay", currentDay);
   }, [currentDay]);
@@ -68,4 +68,15 @@ export default function Page() {
           id="dayInput"
           style={{ width: 100, marginRight: 10 }}
         />
-        <button onClick={() => {
+        <button
+          onClick={() => {
+            const inputDay = parseInt(document.getElementById("dayInput").value);
+            jumpToDay(inputDay);
+          }}
+        >
+          Go
+        </button>
+      </div>
+    </div>
+  );
+}
