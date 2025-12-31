@@ -1,10 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { days } from "../data/days";
 
 export default function Page() {
-  const [currentDay, setCurrentDay] = useState(1);
+  // Load bookmarked day from localStorage or default to 1
+  const [currentDay, setCurrentDay] = useState(() => {
+    const saved = localStorage.getItem("bookmarkedDay");
+    return saved ? parseInt(saved) : 1;
+  });
+
+  // Update localStorage whenever currentDay changes
+  useEffect(() => {
+    localStorage.setItem("bookmarkedDay", currentDay);
+  }, [currentDay]);
+
   const day = days.find(d => d.day === currentDay);
 
   const nextDay = () => {
@@ -13,6 +23,18 @@ export default function Page() {
 
   const prevDay = () => {
     if (currentDay > 1) setCurrentDay(currentDay - 1);
+  };
+
+  const bookmarkDay = () => {
+    alert(`Day ${currentDay} bookmarked!`);
+  };
+
+  const jumpToDay = (inputDay) => {
+    if (inputDay >= 1 && inputDay <= 365) {
+      setCurrentDay(inputDay);
+    } else {
+      alert("Please enter a day between 1 and 365.");
+    }
   };
 
   return (
@@ -25,10 +47,25 @@ export default function Page() {
       <h3>Journaling Prompt</h3>
       <p>{day.prompt}</p>
 
+      {/* Navigation */}
       <div style={{ marginTop: 20 }}>
         <button onClick={prevDay} disabled={currentDay === 1}>Previous</button>
         <button onClick={nextDay} disabled={currentDay === 365} style={{ marginLeft: 10 }}>Next</button>
       </div>
-    </div>
-  );
-}
+
+      {/* Bookmark */}
+      <div style={{ marginTop: 20 }}>
+        <button onClick={bookmarkDay}>Bookmark This Day</button>
+      </div>
+
+      {/* Jump to Day */}
+      <div style={{ marginTop: 20 }}>
+        <input
+          type="number"
+          min="1"
+          max="365"
+          placeholder="Enter day 1-365"
+          id="dayInput"
+          style={{ width: 100, marginRight: 10 }}
+        />
+        <button onClick={() => {
