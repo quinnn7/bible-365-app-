@@ -1,0 +1,4 @@
+// Save the current day
+function saveBookmark(day) {
+  localStorage.setItem('bookmarkedDay', day);
+}
